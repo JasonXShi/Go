@@ -85,7 +85,7 @@ public class Go implements MouseListener, ActionListener{
 		
 		int column = Math.min(24,(int)Math.round(e.getX() / width)); //number of columns and rows closest to click
 		int row = Math.min(24, (int)Math.round(e.getY() / height));
-		if (column == 0 ||  row == 0){
+		if (column == 0 ||  row == 0 || column == 20 ||  row == 20){
 			return;
 		}
 		panel.addPiece((int)(column*width), (int)(row*height));
