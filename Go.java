@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 public class Go implements MouseListener, ActionListener{
 	int tableSize = 20; //size 19 x 19 (plus border)
@@ -27,7 +28,9 @@ public class Go implements MouseListener, ActionListener{
 	final static int BLACK_MOVE = 0;
 	final static int WHITE_MOVE = 1;
 	static int moving = BLACK_MOVE;
-	static boolean moved = true;
+	static boolean moved = false;
+	Piece first = null;
+	ArrayList<ArrayList<Piece>> completed = new ArrayList<ArrayList<Piece>>();
 	public Go(){
 		frame.setSize(800, 800);
 		frame.setResizable(true);
@@ -57,7 +60,13 @@ public class Go implements MouseListener, ActionListener{
 			//back();
 		}
 		if (e.getSource().equals(pass)){
-			//pass();
+			moved = !moved;
+			if (moved == true){
+				turn.setText("                                 Turn: White");
+			}
+			if(moved == false){
+				turn.setText("                                 Turn: Black");
+			}
 		}
 	}
 	@Override
@@ -71,17 +80,23 @@ public class Go implements MouseListener, ActionListener{
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		System.out.println(e.getX() + " , " + e.getY()); 
-		double width = (double)panel.getWidth() / squares[0].length; //get coordinates of mouse click
+		double width = (double)panel.getWidth() / squares[0].length; //width and height of lines
 		double height = (double)panel.getHeight() / squares[0].length; 
 		
-		int column = Math.min(24,(int)(e.getX() / width)); //convert into square
-		int row = Math.min(24, (int)(e.getY() / height));
-		
-		System.out.println(column + " , " + row);
-		squares[row][column] = true; //add square
+		int column = Math.min(24,(int)Math.round(e.getX() / width)); //number of columns and rows closest to click
+		int row = Math.min(24, (int)Math.round(e.getY() / height));
+		if (column == 0 ||  row == 0){
+			return;
+		}
+		panel.addPiece((int)(column*width), (int)(row*height));
 		
 		moved = !moved;
-		
+		if (moved == true){
+			turn.setText("                                 Turn: White");
+		}
+		if(moved == false){
+			turn.setText("                                 Turn: Black");
+		}
 		frame.repaint();
 	}
 
