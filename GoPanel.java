@@ -7,6 +7,7 @@ import javax.swing.*;
 public class GoPanel extends JPanel {
 	ArrayList<Piece> pieceList = new ArrayList<Piece>();
 	ArrayList<ArrayList<Boolean>> adjacency = new ArrayList<ArrayList<Boolean>>();
+
 	boolean[][] squares;
 	boolean[][] invis;
 	double width;
@@ -57,7 +58,9 @@ public class GoPanel extends JPanel {
 			adjacency.get(adjacency.size() - 1).add(false);
 		}
 	}
-
+	public void setPieceList(ArrayList<Piece> pieceList) {
+		this.pieceList = pieceList;
+	}
 	public ArrayList<Piece> getPieceList() {
 		return pieceList;
 	}

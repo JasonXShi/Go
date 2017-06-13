@@ -4,6 +4,8 @@ import java.awt.Container;
 import java.awt.GridLayout;
 
 import javax.swing.*;
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -33,6 +35,10 @@ public class Go implements MouseListener, ActionListener {
 	static boolean moved = false;
 	Piece first = null;
 	ArrayList<ArrayList<Piece>> completed = new ArrayList<ArrayList<Piece>>();
+	int blacknum;
+	int whitenum;
+	int gridcount = 361;
+	int doublepass;
 
 	public Go() {
 		frame.setSize(800, 800);
@@ -43,6 +49,7 @@ public class Go implements MouseListener, ActionListener {
 		// south container
 		south.setLayout((new GridLayout(1, 3)));
 		south.add(back);
+		back.setEnabled(false);
 		back.setBackground(new Color(230, 230, 230));
 		back.addActionListener(this);
 		south.add(pass);
@@ -62,7 +69,14 @@ public class Go implements MouseListener, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(back)) {
-			// back();
+			ArrayList<Piece> temp = panel.getPieceList();
+			temp.remove(temp.size() - 1);
+			if (temp.size()==0){
+				back.setEnabled(false);
+			}
+			panel.setPieceList(temp);
+			moved = !moved;
+			panel.repaint();
 		}
 		if (e.getSource().equals(pass)) {
 			moved = !moved;
@@ -71,6 +85,11 @@ public class Go implements MouseListener, ActionListener {
 			}
 			if (moved == false) {
 				turn.setText("                                 Turn: Black");
+			}
+			doublepass++;
+			if (doublepass == 2){
+				doublepass = 0;
+				checkWin();
 			}
 		}
 	}
@@ -93,7 +112,7 @@ public class Go implements MouseListener, ActionListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		System.out.println(e.getX() + " , " + e.getY());
+		//System.out.println(e.getX() + " , " + e.getY());
 		double width = (double) panel.getWidth() / squares[0].length; // width
 																		// and
 																		// height
@@ -132,10 +151,34 @@ public class Go implements MouseListener, ActionListener {
 				turn.setText("                                 Turn: Black");
 				panel.addPiece((int) (column * width), (int) (row * height), "white");
 			}
+			back.setEnabled(true);
+			doublepass = 0;
 		} else {
 			// invalid piece
 		}
 		frame.repaint();
+		if (panel.pieceList.size() == gridcount){
+		checkWin();
+		}
+	}
 
+	public void checkWin() {
+			for (Piece p: panel.pieceList) {
+				if (p.type.equals("black")) {
+					blacknum++;
+				}
+				if (p.type.equals("white")){
+					whitenum++;
+				}
+			}
+			System.out.println("black" + blacknum); System.out.println("white" + whitenum);
+			if (blacknum > whitenum){
+				System.out.println("Black Wins!");
+				JOptionPane.showMessageDialog(frame, "Black Wins!");
+			}
+			if (whitenum > blacknum){
+				System.out.println("White Wins!");
+				JOptionPane.showMessageDialog(frame, "White Wins!");
+			}
 	}
 }
