@@ -1,16 +1,14 @@
 public class Piece {
 	int x;
 	int y;
-	String label;
-	boolean highlighted;
 	String type;
 
-	public Piece(int newx, int newy, String newType) {
+	public Piece(int newx, int newy, String newType) { //each piece has 3 parameters, its coordinates and color
 		x = newx;
 		y = newy;
 		type = newType;
 	}
-
+	//getters and setters for x, y, and type
 	public int getX() {
 		return x;
 	}
