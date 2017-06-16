@@ -82,6 +82,12 @@ public class Go implements MouseListener, ActionListener {
 			}
 			panel.setPieceList(temp); //set the pieces to the previous temp state
 			moved = !moved; //change the turn back to other player
+			if (moved == true) {
+				turn.setText("                                 Turn: White"); //show player turn
+			}
+			if (moved == false) {
+				turn.setText("                                 Turn: Black"); //show player turn
+			}
 			panel.repaint();
 		}
 		if (e.getSource().equals(pass)) {
