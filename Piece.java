@@ -2,6 +2,7 @@ public class Piece {
 	int x;
 	int y;
 	String type;
+	
 
 	public Piece(int newx, int newy, String newType) { //each piece has 3 parameters, its coordinates and color
 		x = newx;
@@ -30,4 +31,6 @@ public class Piece {
 	public void setType(String newType){
 		this.type = newType;
 	}
+
 }
+

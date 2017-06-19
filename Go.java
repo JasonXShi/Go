@@ -77,10 +77,11 @@ public class Go implements MouseListener, ActionListener {
 		if (e.getSource().equals(back)) {
 			ArrayList<Piece> temp = panel.getPieceList(); //store the previous pieces into an array
 			temp.remove(temp.size() - 1); //remove the last index (-1 because index starts from 0)
+			panel.updateAdjacency();
 			if (temp.size()==0){
 				back.setEnabled(false); //do not allow player to take back if no pieces are played
 			}
-			panel.setPieceList(temp); //set the pieces to the previous temp state
+			//panel.setPieceList(temp); //set the pieces to the previous temp state
 			moved = !moved; //change the turn back to other player
 			if (moved == true) {
 				turn.setText("                                 Turn: White"); //show player turn
@@ -157,15 +158,10 @@ public class Go implements MouseListener, ActionListener {
 		} else {
 			// invalid piece
 		}
-		checkCapture(); //check if any pieces have been captured after each turn and before painting
 		frame.repaint();
 		if (panel.pieceList.size() == gridcount){ //if all spots are filled, check who wins
 		checkWin();
 		}
-	}
-
-	private void checkCapture() {
-		//hey jason do this!!!
 	}
 
 	private void checkWin() { //this algorithm checks who has more territory and displays the result
