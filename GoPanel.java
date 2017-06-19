@@ -52,9 +52,29 @@ public class GoPanel extends JPanel {
 																									// border
 		}
 		// draw piece with black outline and fill with respective color
+
 		for (int a = 0; a < pieceList.size(); a++) {
+			int col = Math.min(24, (int) Math.round(pieceList.get(a).getX() / width)); // find
+																						// column
+																						// that
+																						// is
+																						// closest
+																						// to
+																						// mouse
+			int r = Math.min(24, (int) Math.round(pieceList.get(a).getY() / height)); // find
+																						// row
+																						// that
+																						// is
+																						// closest
+																						// to
+																						// mouse
+
+			if (adjacency[col][r] == "none")
+				continue;
+
 			g.setColor(Color.BLACK);
 			g.drawOval(pieceList.get(a).getX() - 15, pieceList.get(a).getY() - 15, 30, 30);
+
 			if (pieceList.get(a).getType().equals("white")) { // white type
 																// pieces color
 																// white
@@ -146,21 +166,13 @@ public class GoPanel extends JPanel {
 			if (needCheck.isEmpty()) {
 				//
 				for (int i = 0; i < alreadyChecked.size(); i++) {
-					for (int j = 0; j < pieceList.size(); j++) {
-						if ((alreadyChecked.get(i).getX()+1)*45 == pieceList.get(j).getX()
-								&& (alreadyChecked.get(i).getY()+1)*41 == pieceList.get(j).getY()) {
-							System.out.println("remove");
-							pieceList.remove(j);
-							
-						}
-					}
-				}
 
-				repaint();
-				return;
+				}
 			}
 		}
 
+		repaint();
+		return;
 	}
 
 	public void updateAdjacency() {
@@ -172,13 +184,17 @@ public class GoPanel extends JPanel {
 		for (int i = 0; i < pieceList.size(); i++) {
 			System.out.println(pieceList.get(i).getX());
 			System.out.println(pieceList.get(i).getY());
-			System.out.println(((int)Math.round((double)pieceList.get(i).getX() / 45) - 1)+" "+((int)Math.round((double)pieceList.get(i).getY() / 41) - 1));
+			System.out.println(((int) Math.round((double) pieceList.get(i).getX() / 45) - 1) + " "
+					+ ((int) Math.round((double) pieceList.get(i).getY() / 41) - 1));
 			if (pieceList.get(i).getType().equals("black")) {
-				adjacency[(int)Math.round((double)pieceList.get(i).getX() / 45) - 1][(int)Math.round((double)pieceList.get(i).getY() / 41) - 1] = "black";
+				adjacency[(int) Math.round((double) pieceList.get(i).getX() / 45)
+						- 1][(int) Math.round((double) pieceList.get(i).getY() / 41) - 1] = "black";
 			} else if (pieceList.get(i).getType().equals("white")) {
-				adjacency[(int)Math.round((double)pieceList.get(i).getX() / 45) - 1][(int)Math.round((double)pieceList.get(i).getY() / 41) - 1] = "white";
+				adjacency[(int) Math.round((double) pieceList.get(i).getX() / 45)
+						- 1][(int) Math.round((double) pieceList.get(i).getY() / 41) - 1] = "white";
 			}
-		} System.out.println("---------------------------------------");
+		}
+		System.out.println("---------------------------------------");
 	}
 
 	// getters and setters for piece list
