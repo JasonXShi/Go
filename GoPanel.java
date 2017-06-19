@@ -164,9 +164,8 @@ public class GoPanel extends JPanel {
 			}
 
 			if (needCheck.isEmpty()) {
-				//
 				for (int i = 0; i < alreadyChecked.size(); i++) {
-
+					adjacency[alreadyChecked.get(i).getX()][alreadyChecked.get(i).getY()] = "none";
 				}
 			}
 		}
