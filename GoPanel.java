@@ -132,10 +132,9 @@ public class GoPanel extends JPanel {
 							&& alreadyChecked.get(i).getY() == sameSurround.get(a).getY()) {
 						contains++;
 					}
-					
+
 				}
 				if (contains == 0) {
-					
 					needCheck.add(new Piece(sameSurround.get(a).getX(), sameSurround.get(a).getY(),
 							sameSurround.get(a).getType()));
 					checkCapture(sameSurround.get(a).getX(), sameSurround.get(a).getY());
@@ -145,10 +144,19 @@ public class GoPanel extends JPanel {
 			}
 
 			if (needCheck.isEmpty()) {
-				System.out.println("Captured:");
+				//
 				for (int i = 0; i < alreadyChecked.size(); i++) {
-					System.out.println(alreadyChecked.get(i).getX() + " "+alreadyChecked.get(i).getY()+", ");
+					for (int j = 0; j < pieceList.size(); j++) {
+						if ((alreadyChecked.get(i).getX()+1)*45 == pieceList.get(j).getX()
+								&& (alreadyChecked.get(i).getY()+1)*41 == pieceList.get(j).getY()) {
+							System.out.println("remove");
+							pieceList.remove(j);
+							
+						}
+					}
 				}
+
+				repaint();
 				return;
 			}
 		}
@@ -162,12 +170,15 @@ public class GoPanel extends JPanel {
 			}
 		}
 		for (int i = 0; i < pieceList.size(); i++) {
+			System.out.println(pieceList.get(i).getX());
+			System.out.println(pieceList.get(i).getY());
+			System.out.println(((int)Math.round((double)pieceList.get(i).getX() / 45) - 1)+" "+((int)Math.round((double)pieceList.get(i).getY() / 41) - 1));
 			if (pieceList.get(i).getType().equals("black")) {
-				adjacency[pieceList.get(i).getX() / 44 - 1][pieceList.get(i).getY() / 40 - 1] = "black";
+				adjacency[(int)Math.round((double)pieceList.get(i).getX() / 45) - 1][(int)Math.round((double)pieceList.get(i).getY() / 41) - 1] = "black";
 			} else if (pieceList.get(i).getType().equals("white")) {
-				adjacency[pieceList.get(i).getX() / 44 - 1][pieceList.get(i).getY() / 40 - 1] = "white";
+				adjacency[(int)Math.round((double)pieceList.get(i).getX() / 45) - 1][(int)Math.round((double)pieceList.get(i).getY() / 41) - 1] = "white";
 			}
-		}
+		} System.out.println("---------------------------------------");
 	}
 
 	// getters and setters for piece list
