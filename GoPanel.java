@@ -10,9 +10,7 @@ public class GoPanel extends JPanel {
 															// stores all the
 															// pieces
 	String[][] adjacency = new String[19][19]; // array that checks for
-													// neighbors
-	
-	
+												// neighbors
 
 	boolean[][] squares; // squares in the grid
 	double width; // width of each square
@@ -58,24 +56,21 @@ public class GoPanel extends JPanel {
 																									// bottom
 																									// border
 		}
+		// draw piece with black outline and fill with respective color
 		for (int a = 0; a < pieceList.size(); a++) {
 			int col = Math.min(24, (int) Math.round(pieceList.get(a).getX() / width)); // mouse
 			int r = Math.min(24, (int) Math.round(pieceList.get(a).getY() / height));
-
+			if(adjacency[col-1][r-1].equals("none"))continue;
 			g.setColor(Color.BLACK);
 			g.drawOval(pieceList.get(a).getX() - 15, pieceList.get(a).getY() - 15, 30, 30);
-
 			if (pieceList.get(a).getType().equals("white")) { // white type
+																// pieces color
+																// white
 				g.setColor(Color.WHITE);
 				g.fillOval(pieceList.get(a).getX() - 14, pieceList.get(a).getY() - 14, 28, 28);
-			} else if (pieceList.get(a).getType().equals("black")) { // black
-																		// type
-																		// pieces
-																		// color
-																		// black
+			} else { // black type pieces color black
 				g.fillOval(pieceList.get(a).getX() - 15, pieceList.get(a).getY() - 15, 30, 30);
 			}
-			System.out.println(adjacency[col][r]);
 		}
 	}
 
@@ -98,8 +93,6 @@ public class GoPanel extends JPanel {
 	}
 
 	private void checkCapture(int x, int y) {
-
-
 		// intialize the arrayLists for the surrounding pieces of the same type,
 		// and the pieces that need to be checked
 		ArrayList<Piece> sameSurround = new ArrayList<Piece>();
@@ -147,9 +140,10 @@ public class GoPanel extends JPanel {
 							&& alreadyChecked.get(i).getY() == sameSurround.get(a).getY()) {
 						contains++;
 					}
-
+					
 				}
 				if (contains == 0) {
+					
 					needCheck.add(new Piece(sameSurround.get(a).getX(), sameSurround.get(a).getY(),
 							sameSurround.get(a).getType()));
 					checkCapture(sameSurround.get(a).getX(), sameSurround.get(a).getY());
@@ -159,32 +153,27 @@ public class GoPanel extends JPanel {
 			}
 
 			if (needCheck.isEmpty()) {
+				System.out.println("Captured:");
 				for (int i = 0; i < alreadyChecked.size(); i++) {
+					System.out.println(alreadyChecked.get(i).getX()+" "+alreadyChecked.get(i).getY());
 					adjacency[alreadyChecked.get(i).getX()][alreadyChecked.get(i).getY()] = "none";
 				}
+				repaint();
+				return;
 			}
 		}
 
-		repaint();
-		return;
 	}
 
 	public void updateAdjacency() {
-
+		
 		for (int i = 0; i < pieceList.size(); i++) {
-			System.out.println(pieceList.get(i).getX());
-			System.out.println(pieceList.get(i).getY());
-			System.out.println(((int) Math.round((double) pieceList.get(i).getX() / 45) - 1) + " "
-					+ ((int) Math.round((double) pieceList.get(i).getY() / 41) - 1));
 			if (pieceList.get(i).getType().equals("black")) {
-				adjacency[(int) Math.round((double) pieceList.get(i).getX() / 45)
-						- 1][(int) Math.round((double) pieceList.get(i).getY() / 41) - 1] = "black";
+				adjacency[pieceList.get(i).getX() / 44 - 1][pieceList.get(i).getY() / 40 - 1] = "black";
 			} else if (pieceList.get(i).getType().equals("white")) {
-				adjacency[(int) Math.round((double) pieceList.get(i).getX() / 45)
-						- 1][(int) Math.round((double) pieceList.get(i).getY() / 41) - 1] = "white";
+				adjacency[pieceList.get(i).getX() / 44 - 1][pieceList.get(i).getY() / 40 - 1] = "white";
 			}
 		}
-		System.out.println("---------------------------------------");
 	}
 
 	// getters and setters for piece list
