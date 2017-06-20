@@ -66,6 +66,7 @@ public class Go implements MouseListener, ActionListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setResizable(false); //resizing the board messes with piece placement
+		
 	}
 
 	public static void main(String[] args) {
@@ -134,7 +135,6 @@ public class Go implements MouseListener, ActionListener {
 		if (column == 0 || row == 0 || column == 20 || row == 20) { //disable the columns and rows on the sides that make the border
 			return;
 		}
-
 		boolean valid = true;
 		for (int i = 0; i < panel.getPieceList().size(); i++) { //restrict playing on other pieces
 			if (panel.getPieceList().get(i).getX() == (int) (column * width)
@@ -144,16 +144,19 @@ public class Go implements MouseListener, ActionListener {
 			}
 		}
 		if (valid) {
-			moved = !moved; //change turn to other player
-			if (moved == true) { //if black to move...
+			
+			if (moved == false) { //if black to move...
 				turn.setText("                                 Turn: White"); //set label to white
 				panel.addPiece((int) (column * width), (int) (row * height), "black"); //add black piece
+				panel.adjacency[column][row] = "black";
 
-			} else if (moved == false) { //if white to move...
+			} else if (moved == true) { //if white to move...
 				turn.setText("                                 Turn: Black"); //set label to black
 				panel.addPiece((int) (column * width), (int) (row * height), "white"); //add white piece
+				panel.adjacency[column][row] = "white";
 			}
 			back.setEnabled(true); //allow re-takes
+			moved = !moved; //change turn to other player
 			doublepass = 0; //reset pass counter
 		} else {
 			// invalid piece

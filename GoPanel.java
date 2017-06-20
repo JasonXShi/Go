@@ -10,7 +10,9 @@ public class GoPanel extends JPanel {
 															// stores all the
 															// pieces
 	String[][] adjacency = new String[19][19]; // array that checks for
-												// neighbors
+													// neighbors
+	
+	
 
 	boolean[][] squares; // squares in the grid
 	double width; // width of each square
@@ -19,6 +21,11 @@ public class GoPanel extends JPanel {
 
 	public GoPanel(boolean[][] in) {
 		squares = in;
+		for (int i = 0; i < adjacency.length; i++) {
+			for (int a = 0; a < adjacency.length; a++) {
+				adjacency[i][a] = "none";
+			}
+		}
 	}
 
 	public void paintComponent(Graphics g) { // paint square
@@ -51,38 +58,24 @@ public class GoPanel extends JPanel {
 																									// bottom
 																									// border
 		}
-		// draw piece with black outline and fill with respective color
-
 		for (int a = 0; a < pieceList.size(); a++) {
-			int col = Math.min(24, (int) Math.round(pieceList.get(a).getX() / width)); // find
-																						// column
-																						// that
-																						// is
-																						// closest
-																						// to
-																						// mouse
-			int r = Math.min(24, (int) Math.round(pieceList.get(a).getY() / height)); // find
-																						// row
-																						// that
-																						// is
-																						// closest
-																						// to
-																						// mouse
-
-			if (adjacency[col][r] == "none")
-				continue;
+			int col = Math.min(24, (int) Math.round(pieceList.get(a).getX() / width)); // mouse
+			int r = Math.min(24, (int) Math.round(pieceList.get(a).getY() / height));
 
 			g.setColor(Color.BLACK);
 			g.drawOval(pieceList.get(a).getX() - 15, pieceList.get(a).getY() - 15, 30, 30);
 
 			if (pieceList.get(a).getType().equals("white")) { // white type
-																// pieces color
-																// white
 				g.setColor(Color.WHITE);
 				g.fillOval(pieceList.get(a).getX() - 14, pieceList.get(a).getY() - 14, 28, 28);
-			} else { // black type pieces color black
+			} else if (pieceList.get(a).getType().equals("black")) { // black
+																		// type
+																		// pieces
+																		// color
+																		// black
 				g.fillOval(pieceList.get(a).getX() - 15, pieceList.get(a).getY() - 15, 30, 30);
 			}
+			System.out.println(adjacency[col][r]);
 		}
 	}
 
@@ -105,6 +98,8 @@ public class GoPanel extends JPanel {
 	}
 
 	private void checkCapture(int x, int y) {
+
+
 		// intialize the arrayLists for the surrounding pieces of the same type,
 		// and the pieces that need to be checked
 		ArrayList<Piece> sameSurround = new ArrayList<Piece>();
@@ -175,11 +170,7 @@ public class GoPanel extends JPanel {
 	}
 
 	public void updateAdjacency() {
-		for (int i = 0; i < adjacency.length; i++) {
-			for (int a = 0; a < adjacency.length; a++) {
-				adjacency[i][a] = "none";
-			}
-		}
+
 		for (int i = 0; i < pieceList.size(); i++) {
 			System.out.println(pieceList.get(i).getX());
 			System.out.println(pieceList.get(i).getY());
