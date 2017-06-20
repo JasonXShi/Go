@@ -1,3 +1,4 @@
+
 /*	Game of Go
  * 	By: Alec Xia and Jason Shi
  * 	6/16/2017
@@ -22,9 +23,11 @@ import java.util.ArrayList;
 
 public class Go implements MouseListener, ActionListener {
 	int tableSize = 20; // size 19 x 19 (plus border on the side)
-	boolean[][] squares = new boolean[tableSize][tableSize]; // each array is table size x table size
+	boolean[][] squares = new boolean[tableSize][tableSize]; // each array is
+																// table size x
+																// table size
 	boolean[][] nextsquares = new boolean[tableSize][tableSize];
-	int neighbors = 0; //number of neighbors next to a certain piece
+	int neighbors = 0; // number of neighbors next to a certain piece
 	JFrame frame = new JFrame("Go");
 	GoPanel panel = new GoPanel(squares); // grid in middle
 	Container north = new Container(); // space on side
@@ -34,20 +37,24 @@ public class Go implements MouseListener, ActionListener {
 	JButton back = new JButton("Take Back");
 	JButton pass = new JButton("Pass Turn");
 	JLabel turn = new JLabel("                                 Turn: Black");
-	boolean running = false; 
-	final static int BLACK_MOVE = 0; //black to move
-	final static int WHITE_MOVE = 1; //white to move
-	static int moving = BLACK_MOVE; //starts with black
+	boolean running = false;
+	final static int BLACK_MOVE = 0; // black to move
+	final static int WHITE_MOVE = 1; // white to move
+	static int moving = BLACK_MOVE; // starts with black
 	static boolean moved = false; // boolean flips the turn
-	Piece first = null; 
-	ArrayList<ArrayList<Piece>> completed = new ArrayList<ArrayList<Piece>>(); //completed game board array list
-	int blacknum; //black territory
-	int whitenum; //white territory
-	int gridcount = 361; //total spots on board (19x19)
-	int doublepass; //count back-to-back passes
+	Piece first = null;
+	ArrayList<ArrayList<Piece>> completed = new ArrayList<ArrayList<Piece>>(); // completed
+																				// game
+																				// board
+																				// array
+																				// list
+	int blacknum; // black territory
+	int whitenum; // white territory
+	int gridcount = 361; // total spots on board (19x19)
+	int doublepass; // count back-to-back passes
 
-	public Go() { //create interface
-		frame.setSize(900, 900); //appropriate size for game board
+	public Go() { // create interface
+		frame.setSize(900, 900); // appropriate size for game board
 		frame.setResizable(true);
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
@@ -65,8 +72,9 @@ public class Go implements MouseListener, ActionListener {
 		frame.add(south, BorderLayout.SOUTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-		frame.setResizable(false); //resizing the board messes with piece placement
-		
+		frame.setResizable(false); // resizing the board messes with piece
+									// placement
+
 	}
 
 	public static void main(String[] args) {
@@ -76,34 +84,49 @@ public class Go implements MouseListener, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(back)) {
-			ArrayList<Piece> temp = panel.getPieceList(); //store the previous pieces into an array
-			temp.remove(temp.size() - 1); //remove the last index (-1 because index starts from 0)
+			ArrayList<Piece> temp = panel.getPieceList(); // store the previous
+															// pieces into an
+															// array
+			temp.remove(temp.size() - 1); // remove the last index (-1 because
+											// index starts from 0)
 			panel.updateAdjacency();
-			if (temp.size()==0){
-				back.setEnabled(false); //do not allow player to take back if no pieces are played
+			if (temp.size() == 0) {
+				back.setEnabled(false); // do not allow player to take back if
+										// no pieces are played
 			}
-			//panel.setPieceList(temp); //set the pieces to the previous temp state
-			moved = !moved; //change the turn back to other player
+			// panel.setPieceList(temp); //set the pieces to the previous temp
+			// state
+			moved = !moved; // change the turn back to other player
 			if (moved == true) {
-				turn.setText("                                 Turn: White"); //show player turn
+				turn.setText("                                 Turn: White"); // show
+																				// player
+																				// turn
 			}
 			if (moved == false) {
-				turn.setText("                                 Turn: Black"); //show player turn
+				turn.setText("                                 Turn: Black"); // show
+																				// player
+																				// turn
 			}
 			panel.repaint();
 		}
 		if (e.getSource().equals(pass)) {
-			moved = !moved; //change the turn to other player
+			moved = !moved; // change the turn to other player
 			if (moved == true) {
-				turn.setText("                                 Turn: White"); //show player turn
+				turn.setText("                                 Turn: White"); // show
+																				// player
+																				// turn
 			}
 			if (moved == false) {
-				turn.setText("                                 Turn: Black"); //show player turn
+				turn.setText("                                 Turn: Black"); // show
+																				// player
+																				// turn
 			}
-			doublepass++; //add pass to counter (mouse released will reset counter)
-			if (doublepass == 2){ //check if players have passed back-to-back 
+			doublepass++; // add pass to counter (mouse released will reset
+							// counter)
+			if (doublepass == 2) { // check if players have passed back-to-back
 				doublepass = 0;
-				checkWin(); //check win on two passes (if both players pass, game ends)
+				checkWin(); // check win on two passes (if both players pass,
+							// game ends)
 			}
 		}
 	}
@@ -126,17 +149,42 @@ public class Go implements MouseListener, ActionListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		//System.out.println(e.getX() + " , " + e.getY()); //was used to debug
-		double width = (double) panel.getWidth() / squares[0].length; // width of lines
-		double height = (double) panel.getHeight() / squares[0].length; //height of lines
+		// System.out.println(e.getX() + " , " + e.getY()); //was used to debug
+		double width = (double) panel.getWidth() / squares[0].length; // width
+																		// of
+																		// lines
+		double height = (double) panel.getHeight() / squares[0].length; // height
+																		// of
+																		// lines
 
-		int column = Math.min(24, (int) Math.round(e.getX() / width)); // find column that is closest to mouse
-		int row = Math.min(24, (int) Math.round(e.getY() / height)); //find row that is closest to mouse
-		if (column == 0 || row == 0 || column == 20 || row == 20) { //disable the columns and rows on the sides that make the border
+		int column = Math.min(24, (int) Math.round(e.getX() / width)); // find
+																		// column
+																		// that
+																		// is
+																		// closest
+																		// to
+																		// mouse
+		int row = Math.min(24, (int) Math.round(e.getY() / height)); // find row
+																		// that
+																		// is
+																		// closest
+																		// to
+																		// mouse
+		if (column == 0 || row == 0 || column == 20 || row == 20) { // disable
+																	// the
+																	// columns
+																	// and rows
+																	// on the
+																	// sides
+																	// that make
+																	// the
+																	// border
 			return;
 		}
 		boolean valid = true;
-		for (int i = 0; i < panel.getPieceList().size(); i++) { //restrict playing on other pieces
+		for (int i = 0; i < panel.getPieceList().size(); i++) { // restrict
+																// playing on
+																// other pieces
 			if (panel.getPieceList().get(i).getX() == (int) (column * width)
 					&& panel.getPieceList().get(i).getY() == (int) (row * height)) {
 				valid = false;
@@ -144,44 +192,58 @@ public class Go implements MouseListener, ActionListener {
 			}
 		}
 		if (valid) {
-			
-			if (moved == false) { //if black to move...
-				turn.setText("                                 Turn: White"); //set label to white
-				panel.addPiece((int) (column * width), (int) (row * height), "black"); //add black piece
+
+			if (moved == false) { // if black to move...
+				turn.setText("                                 Turn: White"); // set
+																				// label
+																				// to
+																				// white
+				panel.addPiece((int) (column * width), (int) (row * height), "black"); // add
+																						// black
+																						// piece
 				panel.adjacency[column][row] = "black";
 
-			} else if (moved == true) { //if white to move...
-				turn.setText("                                 Turn: Black"); //set label to black
-				panel.addPiece((int) (column * width), (int) (row * height), "white"); //add white piece
+			} else if (moved == true) { // if white to move...
+				turn.setText("                                 Turn: Black"); // set
+																				// label
+																				// to
+																				// black
+				panel.addPiece((int) (column * width), (int) (row * height), "white"); // add
+																						// white
+																						// piece
 				panel.adjacency[column][row] = "white";
 			}
-			back.setEnabled(true); //allow re-takes
-			moved = !moved; //change turn to other player
-			doublepass = 0; //reset pass counter
+			back.setEnabled(true); // allow re-takes
+			moved = !moved; // change turn to other player
+			doublepass = 0; // reset pass counter
 		} else {
 			// invalid piece
 		}
 		frame.repaint();
-		if (panel.pieceList.size() == gridcount){ //if all spots are filled, check who wins
-		checkWin();
+		if (panel.pieceList.size() == gridcount) { // if all spots are filled,
+													// check who wins
+			checkWin();
 		}
 	}
 
-	private void checkWin() { //this algorithm checks who has more territory and displays the result
-			for (Piece p: panel.pieceList) { //go through all the pieces
-				if (p.type.equals("black")) { //for every black piece...
-					blacknum++; //add to number of black territories
+	private void checkWin() { // this algorithm checks who has more territory
+								// and displays the result
+		for (int i = 0; i < panel.adjacency.length; i++) {
+			for (int a = 0; a < panel.adjacency.length; a++) {
+				if(panel.adjacency[i][a].equals("white")){
+					whitenum++;
+				}else if(panel.adjacency[i][a].equals("black")){
+					blacknum++;
 				}
-				if (p.type.equals("white")){ //for every white piece...
-					whitenum++; //add to number of white territories
-				}
 			}
-			System.out.println("black" + blacknum); System.out.println("white" + whitenum); //used for debugging
-			if (blacknum > whitenum){ //if black has more land...
-				JOptionPane.showMessageDialog(frame, "Black Wins!");
-			}
-			if (whitenum > blacknum){ //if white has more land...
-				JOptionPane.showMessageDialog(frame, "White Wins!");
-			}
+		}
+		System.out.println("black" + blacknum);
+		System.out.println("white" + whitenum); // used for debugging
+		if (blacknum > whitenum) { // if black has more land...
+			JOptionPane.showMessageDialog(frame, "Black Wins!");
+		}
+		if (whitenum > blacknum) { // if white has more land...
+			JOptionPane.showMessageDialog(frame, "White Wins!");
+		}
 	}
 }
