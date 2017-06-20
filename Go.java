@@ -74,7 +74,6 @@ public class Go implements MouseListener, ActionListener {
 		frame.setVisible(true);
 		frame.setResizable(false); // resizing the board messes with piece
 									// placement
-
 	}
 
 	public static void main(String[] args) {
@@ -181,6 +180,7 @@ public class Go implements MouseListener, ActionListener {
 																	// border
 			return;
 		}
+
 		boolean valid = true;
 		for (int i = 0; i < panel.getPieceList().size(); i++) { // restrict
 																// playing on
@@ -192,8 +192,8 @@ public class Go implements MouseListener, ActionListener {
 			}
 		}
 		if (valid) {
-
-			if (moved == false) { // if black to move...
+			moved = !moved; // change turn to other player
+			if (moved == true) { // if black to move...
 				turn.setText("                                 Turn: White"); // set
 																				// label
 																				// to
@@ -201,9 +201,8 @@ public class Go implements MouseListener, ActionListener {
 				panel.addPiece((int) (column * width), (int) (row * height), "black"); // add
 																						// black
 																						// piece
-				panel.adjacency[column][row] = "black";
 
-			} else if (moved == true) { // if white to move...
+			} else if (moved == false) { // if white to move...
 				turn.setText("                                 Turn: Black"); // set
 																				// label
 																				// to
@@ -211,10 +210,8 @@ public class Go implements MouseListener, ActionListener {
 				panel.addPiece((int) (column * width), (int) (row * height), "white"); // add
 																						// white
 																						// piece
-				panel.adjacency[column][row] = "white";
 			}
 			back.setEnabled(true); // allow re-takes
-			moved = !moved; // change turn to other player
 			doublepass = 0; // reset pass counter
 		} else {
 			// invalid piece
@@ -228,11 +225,11 @@ public class Go implements MouseListener, ActionListener {
 
 	private void checkWin() { // this algorithm checks who has more territory
 								// and displays the result
-		for (int i = 0; i < panel.adjacency.length; i++) {
-			for (int a = 0; a < panel.adjacency.length; a++) {
-				if(panel.adjacency[i][a].equals("white")){
+		for (int a = 0; a < panel.adjacency.length; a++) {
+			for (int b = 0; b < panel.adjacency.length; b++) {
+				if(panel.adjacency[a][b].equals("white")){
 					whitenum++;
-				}else if(panel.adjacency[i][a].equals("black")){
+				}else if(panel.adjacency[a][b].equals("black")){
 					blacknum++;
 				}
 			}
