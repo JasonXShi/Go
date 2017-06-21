@@ -37,7 +37,6 @@ public class Go implements MouseListener, ActionListener {
 	JButton back = new JButton("Take Back");
 	JButton pass = new JButton("Pass Turn");
 	JLabel turn = new JLabel("                                 Turn: Black");
-	boolean running = false;
 	final static int BLACK_MOVE = 0; // black to move
 	final static int WHITE_MOVE = 1; // white to move
 	static int moving = BLACK_MOVE; // starts with black
@@ -201,6 +200,7 @@ public class Go implements MouseListener, ActionListener {
 				panel.addPiece((int) (column * width), (int) (row * height), "black"); // add
 																						// black
 																						// piece
+				
 
 			} else if (moved == false) { // if white to move...
 				turn.setText("                                 Turn: Black"); // set
@@ -210,6 +210,7 @@ public class Go implements MouseListener, ActionListener {
 				panel.addPiece((int) (column * width), (int) (row * height), "white"); // add
 																						// white
 																						// piece
+
 			}
 			back.setEnabled(true); // allow re-takes
 			doublepass = 0; // reset pass counter
@@ -238,9 +239,13 @@ public class Go implements MouseListener, ActionListener {
 		System.out.println("white" + whitenum); // used for debugging
 		if (blacknum > whitenum) { // if black has more land...
 			JOptionPane.showMessageDialog(frame, "Black Wins!");
+			whitenum = 0;
+			blacknum =0;
 		}
 		if (whitenum > blacknum) { // if white has more land...
 			JOptionPane.showMessageDialog(frame, "White Wins!");
+			whitenum = 0;
+			blacknum =0;
 		}
 	}
 }

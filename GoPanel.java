@@ -56,11 +56,19 @@ public class GoPanel extends JPanel {
 																									// bottom
 																									// border
 		}
-		// draw piece with black outline and fill with respective color
 		for (int a = 0; a < pieceList.size(); a++) {
+			//if adjacency[][] is none then take it out from piecelist and repaint
 			int col = Math.min(24, (int) Math.round(pieceList.get(a).getX() / width)); // mouse
 			int r = Math.min(24, (int) Math.round(pieceList.get(a).getY() / height));
-			if(adjacency[col-1][r-1].equals("none"))continue;
+			if (adjacency[col - 1][r - 1].equals("none")) {
+
+				pieceList.remove(a);
+
+				System.out.println("remove a piece");
+				repaint();
+				break;
+			}
+			// draw piece with black outline and fill with respective color
 			g.setColor(Color.BLACK);
 			g.drawOval(pieceList.get(a).getX() - 15, pieceList.get(a).getY() - 15, 30, 30);
 			if (pieceList.get(a).getType().equals("white")) { // white type
@@ -72,6 +80,7 @@ public class GoPanel extends JPanel {
 				g.fillOval(pieceList.get(a).getX() - 15, pieceList.get(a).getY() - 15, 30, 30);
 			}
 		}
+
 	}
 
 	public void addPiece(int newx, int newy, String newType) {
@@ -82,6 +91,7 @@ public class GoPanel extends JPanel {
 	}
 
 	private void checkWin() {
+		//check for capture on all the array
 		for (int i = 0; i < adjacency.length; i++) {
 			for (int j = 0; j < adjacency.length; j++) {
 				if (adjacency[i][j].equals("black") || adjacency[i][j].equals("white")) {
@@ -98,6 +108,7 @@ public class GoPanel extends JPanel {
 		ArrayList<Piece> sameSurround = new ArrayList<Piece>();
 		ArrayList<Piece> needCheck = new ArrayList<Piece>();
 		int blankSurround = 0;
+		//finds the things surrounding that are blank
 		if (x > 0) {
 			if (adjacency[x][y].equals(adjacency[x - 1][y])) {
 				sameSurround.add(new Piece(x - 1, y, adjacency[x][y]));
@@ -126,12 +137,11 @@ public class GoPanel extends JPanel {
 				blankSurround++;
 			}
 		}
-
+		//if theres more than 0 blanks than it cannot be captured
 		if (blankSurround > 0) {
 			return;
 		} else {
-			// find same surround, add current piece to already checked
-			// arraylist, check same surround pieces
+			// current piece to already checked arraylist, check same surround pieces if not already checked
 			alreadyChecked.add(new Piece(x, y, adjacency[x][y]));
 			int contains = 0;
 			for (int a = 0; a < sameSurround.size(); a++) {
@@ -140,10 +150,10 @@ public class GoPanel extends JPanel {
 							&& alreadyChecked.get(i).getY() == sameSurround.get(a).getY()) {
 						contains++;
 					}
-					
+
 				}
 				if (contains == 0) {
-					
+
 					needCheck.add(new Piece(sameSurround.get(a).getX(), sameSurround.get(a).getY(),
 							sameSurround.get(a).getType()));
 					checkCapture(sameSurround.get(a).getX(), sameSurround.get(a).getY());
@@ -153,9 +163,10 @@ public class GoPanel extends JPanel {
 			}
 
 			if (needCheck.isEmpty()) {
+				//if captured then repaint and set adjacency[][] spots to "none" again
 				System.out.println("Captured:");
 				for (int i = 0; i < alreadyChecked.size(); i++) {
-					System.out.println(alreadyChecked.get(i).getX()+" "+alreadyChecked.get(i).getY());
+					System.out.println(alreadyChecked.get(i).getX() + " " + alreadyChecked.get(i).getY());
 					adjacency[alreadyChecked.get(i).getX()][alreadyChecked.get(i).getY()] = "none";
 				}
 				repaint();
@@ -166,7 +177,8 @@ public class GoPanel extends JPanel {
 	}
 
 	public void updateAdjacency() {
-		
+		// uses piecelist to update the adjacency matrix (misnomer, pretty much
+		// the board)
 		for (int i = 0; i < pieceList.size(); i++) {
 			if (pieceList.get(i).getType().equals("black")) {
 				adjacency[pieceList.get(i).getX() / 44 - 1][pieceList.get(i).getY() / 40 - 1] = "black";
